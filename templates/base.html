@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+   
+<div id="signupModal" class="modal">
+  <a href="#" class="modal-bg"></a>
+
+  <div class="modal-box">
+    <a href="#" class="modal-close">×</a>
+
+    <h2 class="modal-title">Хочу записаться!</h2>
+    <p class="modal-sub">
+      Meet Sarah, a visionary hairstylist with a passion for beauty and a heart full of dreams.
+    </p>
+
+    <form method="post" action="{% url 'signup' %}" class="modal-form">
+      {% csrf_token %}
+
+      <div class="row">
+        <p>Имя{{ signup_form.name }}</p>
+        <p>Номер телефона{{ signup_form.phone_number }}</p>
+      </div>
+
+      <div class="row">
+        <p>Услуги{{ signup_form.services }}</p>
+        <p>Мастера{{ signup_form.master }}</p>
+      </div>
+
+      <div class="row">
+        {{ signup_form.date }}
+        {{ signup_form.time }}
+      </div>
+
+      <p>Комментарий{{ signup_form.comment }}</p>
+
+      <div class="actions">
+        <a href="#" class="btn cancel">Отмена</a>
+        <button type="submit" class="btn submit">Забронировать</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+    {% include 'components/navbar.html' %}
+
+    {% block content %}
+
+    {% endblock %}
+
+    {% include 'components/footer.html' %}
+  </body>
+</html>

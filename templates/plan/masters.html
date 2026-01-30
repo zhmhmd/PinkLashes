@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<section class="sec masters">
+  <h2 class="h2">Наши мастера</h2>
+
+  <div class="tabs">
+    <a class="tab tab--on" href="#">Ногтевой сервис</a>
+    <a class="tab" href="#">Наращивание ресниц</a>
+    <a class="tab" href="#">Брови</a>
+  </div>
+
+  <div class="mgrid">
+    {% for m in masters|slice:":4" %}
+      <article class="mcard">
+        <div class="mimg">
+          {% if m.img %}<img src="{{ m.img.url }}" alt="{{ m.name }}">{% endif %}
+        </div>
+
+        <div class="minfo">
+          <h3 class="mname">{{ m.name }}</h3>
+          <div class="mpos">{{ m.get_position_display }}</div>
+          <div class="mexp">Опыт работы — {{ m.experience }}</div>
+          <p class="mdesc">{{ m.description|truncatechars:140 }}</p>
+          <a class="mbtn" href="{% url 'aboutmaster' m.id %}">Подробнее</a>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+
+
+<section class="sec gallery">
+
+  <h2 class="h2">Фотогалерея работ</h2>
+
+  <div class="tabs">
+    <a class="tab tab--on" href="#">Ногтевой сервис</a>
+    <a class="tab" href="#">Наращивание ресниц</a>
+    <a class="tab" href="#">Брови</a>
+  </div>
+
+  <div class="ggrid">
+    {% for g in galleries|slice:":3" %}
+      <div class="gcard">
+        <div class="gimg">
+          {% if g.img %}<img src="{{ g.img.url }}" alt="{{ g.name }}">{% endif %}
+        </div>
+        <div class="gcap">{{ g.name }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+
+{% endblock content %}

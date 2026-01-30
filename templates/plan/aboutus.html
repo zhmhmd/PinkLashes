@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<section class='head'>
+</section>
+
+<section class="story sec">
+  <div class="dots">
+    <span class="d d1"></span><span class="d d2"></span><span class="d d3"></span><span class="d d4"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="st-top">Наша история</div>
+
+    <p class="st-text">
+     Since 2012 in a charming Hawaii Town, Serene Beauty emerged as a haven for beauty and tranquility. Founded by Sarah, a passionate hairstylist, the salon's simple yet profound vision was to enhance natural beauty while providing a peaceful escape.
+
+With time, Serene Beauty's dedicated team grew, offering a range of services from esthetics to makeup. It became a beloved part of the community, known for its serene ambiance and commitment to giving back through charity events.</p>
+
+    <div class="st-photos">
+      <div class="ph"><img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80" alt=""></div>
+      <div class="ph"><img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80" alt=""></div>
+      <div class="ph"><img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80" alt=""></div>
+    </div>
+  </div>
+</section>
+
+<section class="found sec">
+  <div class="wrap fgrid">
+    <div class="fimg">
+      <img src="static/images/photo_2026-01-29_18-55-57.jpg" alt="">
+    </div>
+
+    <div class="finfo">
+      <div class="ftag">НАШ ОСНОВАТЕЛЬ</div>
+      <h2 class="fname">Zhakhongir Makhamadaminov</h2>
+
+      <p class="fdesc">
+        Meet Zhakhongir, a visionary hairstylist with a passion for beauty and a heart full of dreams. As the owner of Serene Beauty, her journey unfolds in the enchanting world of tranquil transformations.
+      </p>
+
+      <div class="flist">
+        <div class="fit">
+          <div class="num">01</div>
+          <div class="txt">
+            <div class="t">Master Stylist of the Year:</div>
+            <div class="s">Zhakhongir's exceptional talent and dedication to her craft earned her the prestigious title of "Master Stylist of the Year" at the National Beauty Excellence Awards.</div>
+          </div>
+        </div>
+
+        <div class="fit">
+          <div class="num">02</div>
+          <div class="txt">
+            <div class="t">Master Stylist of the Year:</div>
+            <div class="s">Zhakhongir's exceptional talent and dedication to her craft earned her the prestigious title of "Master Stylist of the Year" at the National Beauty Excellence Awards.</div>
+          </div>
+        </div>
+
+        <div class="fit">
+          <div class="num">03</div>
+          <div class="txt">
+            <div class="t">Master Stylist of the Year:</div>
+            <div class="s">Zhakhongir's exceptional talent and dedication to her craft earned her the prestigious title of "Master Stylist of the Year" at the National Beauty Excellence Awards.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec masters">
+  <h2 class="h2">Наши мастера</h2>
+
+  <div class="tabs">
+    <a class="tab tab--on" href="#">Ногтевой сервис</a>
+    <a class="tab" href="#">Наращивание ресниц</a>
+    <a class="tab" href="#">Брови</a>
+  </div>
+
+  <div class="mgrid">
+    {% for m in masters|slice:":4" %}
+      <article class="mcard">
+        <div class="mimg">
+          {% if m.img %}<img src="{{ m.img.url }}" alt="{{ m.name }}">{% endif %}
+        </div>
+
+        <div class="minfo">
+          <h3 class="mname">{{ m.name }}</h3>
+          <div class="mpos">{{ m.get_position_display }}</div>
+          <div class="mexp">Опыт работы — {{ m.experience }}</div>
+          <p class="mdesc">{{ m.description|truncatechars:140 }}</p>
+          <a class="mbtn" href="{% url 'aboutmaster' m.id %}">Подробнее</a>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+
+{% endblock content %}
