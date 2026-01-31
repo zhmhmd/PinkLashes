@@ -3,8 +3,18 @@ from django.utils.html import format_html
 from .models import Service, Master, Gallery, Review, TypeOfService, SignUp
 
 
-@admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
+def img_preview(obj, field_name="img"):
+    f = getattr(obj, field_name, None)
+    if f:
+        return format_html(
+            '<img src="{}" style="height:60px; width:auto; border-radius:8px; object-fit:cover;" />',
+            f.url,
+        )
+    return "—"
+
+
+@admin.register(TypeOfService)
+class TypeOfServiceAdmin(admin.ModelAdmin):
     list_display = ("id", "image_preview", "name")
     list_display_links = ("id", "name")
     search_fields = ("name",)
@@ -13,27 +23,31 @@ class ServiceAdmin(admin.ModelAdmin):
     fields = ("image_preview", "img", "name")
 
     def image_preview(self, obj):
-        if getattr(obj, "img", None) and obj.img:
-            return format_html(
-                '<img src="{}" style="height:60px; width:auto; border-radius:8px; object-fit:cover;" />',
-                obj.img.url
-            )
-        return "—"
+        return img_preview(obj, "img")
+
+
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ("id", "title", "price", "type")
+    list_display_links = ("id", "title")
+    search_fields = ("title", "type__name")
+    list_filter = ("type", "masters")
+    ordering = ("id",)
+    filter_horizontal = ("masters",)
 
 
 @admin.register(Master)
 class MasterAdmin(admin.ModelAdmin):
     list_display = ("id", "image_preview", "name", "position", "experience")
     list_display_links = ("id", "name")
-    list_filter = ("position", "services")
+    list_filter = ("position",)
     search_fields = ("name", "experience")
     ordering = ("id",)
-    filter_horizontal = ("services",)
     readonly_fields = ("image_preview",)
 
     fieldsets = (
         ("Основное", {
-            "fields": ("image_preview", "img", "name", "position", "experience", "description", "services")
+            "fields": ("image_preview", "img", "name", "position", "experience", "description", "type",)
         }),
         ("Соцсети", {
             "fields": ("telegramm", "instagram", "tiktok", "whatsapp", "youtube"),
@@ -41,30 +55,20 @@ class MasterAdmin(admin.ModelAdmin):
     )
 
     def image_preview(self, obj):
-        if getattr(obj, "img", None) and obj.img:
-            return format_html(
-                '<img src="{}" style="height:60px; width:auto; border-radius:8px; object-fit:cover;" />',
-                obj.img.url
-            )
-        return "—"
+        return img_preview(obj, "img")
 
 
 @admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
-    list_display = ("id", "image_preview", "name")
+    list_display = ("id", "image_preview", "name",)
     list_display_links = ("id", "name")
     search_fields = ("name",)
     ordering = ("id",)
     readonly_fields = ("image_preview",)
-    fields = ("image_preview", "img", "name")
+    fields = ("image_preview", "img", "name", "type",)
 
     def image_preview(self, obj):
-        if getattr(obj, "img", None) and obj.img:
-            return format_html(
-                '<img src="{}" style="height:60px; width:auto; border-radius:8px; object-fit:cover;" />',
-                obj.img.url
-            )
-        return "—"
+        return img_preview(obj, "img")
 
 
 @admin.register(Review)
@@ -76,23 +80,11 @@ class ReviewAdmin(admin.ModelAdmin):
     ordering = ("-id",)
 
 
-@admin.register(TypeOfService)
-class TypeOfServiceAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "price")
-    list_display_links = ("id", "title")
-    search_fields = ("title",)
-    ordering = ("id",)
-    filter_horizontal = ("master",)
-    list_filter = ("master",)
-
-
 @admin.register(SignUp)
 class SignUpAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "phone_number", "master", "date", "time")
+    list_display = ("id", "name", "phone_number", "master", "service", "date", "time")
     list_display_links = ("id", "name")
-    list_filter = ("date", "master", "services")
-    search_fields = ("name", "phone_number", "master__name")
+    list_filter = ("date", "master", "service")
+    search_fields = ("name", "phone_number", "master__name", "service__title")
     ordering = ("-date", "-time")
-    filter_horizontal = ("services",)
-
-    fields = ("name", "phone_number", "master", "services", "date", "time", "comment")
+    fields = ("name", "phone_number", "master", "service", "date", "time", "comment")

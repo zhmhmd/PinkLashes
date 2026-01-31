@@ -3,80 +3,89 @@
 
 {% block content %}
 
-<section class='head'>
-</section>
+<section class="head"></section>
 
 <section class="sec services">
   <h2 class="title">Какие услуги мы предлагаем</h2>
 
   <div class="service-list">
-    {% for service in services|slice:":3" %}
-      <div class="service">
-        {% if service.img %}
-          <img src="{{ service.img.url }}" alt="{{ service.name }}">
-        {% endif %}
-        <p>{{ service.name }}</p>
-      </div>
-    {% endfor %}
-  </div>
-</section>
+  {% for t in typesofservice|slice:":3" %}
+    <a href="{% url 'service' %}?type={{ t.id }}" class="service">
+      <img src="{{ t.img.url }}" alt="{{ t.name }}">
+      <p>{{ t.name }}</p>
+    </a>
+  {% endfor %}
+</div>
 
+</section>
 
 <section class="sec masters">
   <h2 class="h2">Наши мастера</h2>
 
   <div class="tabs">
-    <a class="tab tab--on" href="#">Ногтевой сервис</a>
-    <a class="tab" href="#">Наращивание ресниц</a>
-    <a class="tab" href="#">Брови</a>
-  </div>
+  {% for t in typesofservice %}
+    <a
+      href="?type={{ t.id }}"
+      class="tab {% if active_type == t.id %}tab--active{% endif %}"
+    >
+      {{ t.name }}
+    </a>
+  {% endfor %}
+</div>
+
 
   <div class="mgrid">
-    {% for m in masters|slice:":4" %}
-      <article class="mcard">
-        <div class="mimg">
-          {% if m.img %}<img src="{{ m.img.url }}" alt="{{ m.name }}">{% endif %}
-        </div>
+  {% for m in masters %}
+    <article class="mcard">
+      <div class="mimg">
+        {% if m.img %}
+          <img src="{{ m.img.url }}" alt="{{ m.name }}">
+        {% endif %}
+      </div>
 
-        <div class="minfo">
-          <h3 class="mname">{{ m.name }}</h3>
-          <div class="mpos">{{ m.get_position_display }}</div>
-          <div class="mexp">Опыт работы — {{ m.experience }}</div>
-          <p class="mdesc">{{ m.description|truncatechars:140 }}</p>
-          <a class="mbtn" href="{% url 'aboutmaster' m.id %}">Подробнее</a>
-        </div>
-      </article>
-    {% endfor %}
-  </div>
+      <div class="minfo">
+        <h3 class="mname">{{ m.name }}</h3>
+        <div class="mpos">{{ m.get_position_display }}</div>
+        <p class="mdesc">{{ m.description|truncatechars:120 }}</p>
+        <a class="mbtn" href="{% url 'aboutmaster' m.id %}">Подробнее</a>
+      </div>
+    </article>
+  {% empty %}
+    <p style="text-align:center;">Нет мастеров для этого сервиса</p>
+  {% endfor %}
+</div>
+
 </section>
 
-
-
 <section class="sec gallery">
-
   <h2 class="h2">Фотогалерея работ</h2>
 
   <div class="tabs">
-    <a class="tab tab--on" href="#">Ногтевой сервис</a>
-    <a class="tab" href="#">Наращивание ресниц</a>
-    <a class="tab" href="#">Брови</a>
-  </div>
+  {% for t in typesofservice %}
+    <a
+      href="?type={{ t.id }}"
+      class="tab {% if active_type == t.id %}tab--active{% endif %}"
+    >
+      {{ t.name }}
+    </a>
+  {% endfor %}
+</div>
 
   <div class="ggrid">
-    {% for g in galleries|slice:":3" %}
+    {% for g in galleries %}
       <div class="gcard">
-        <div class="gimg">
-          {% if g.img %}<img src="{{ g.img.url }}" alt="{{ g.name }}">{% endif %}
-        </div>
-        <div class="gcap">{{ g.name }}</div>
+        {% if g.img %}
+          <img src="{{ g.img.url }}" alt="{{ g.name }}">
+        {% endif %}
+        <p>{{ g.name }}</p>
       </div>
+    {% empty %}
+      <p style="text-align:center;">Нет работ для этого сервиса</p>
     {% endfor %}
   </div>
 </section>
 
-
 <section class="rev">
-
   <h2 class="rh">Отзывы клиентов</h2>
 
   <div class="rgrid">
@@ -84,12 +93,14 @@
       <article class="rcard">
         <div class="rquote">“</div>
 
-        <p class="rtext">
-          {{ r.comment|truncatechars:170 }}
-        </p>
+        <p class="rtext">{{ r.comment|truncatechars:170 }}</p>
 
         <div class="rstars">
-          {% for _ in "12345"|slice:":r.score" %}★{% endfor %}
+          {% if r.score >= 1 %}★{% else %}☆{% endif %}
+          {% if r.score >= 2 %}★{% else %}☆{% endif %}
+          {% if r.score >= 3 %}★{% else %}☆{% endif %}
+          {% if r.score >= 4 %}★{% else %}☆{% endif %}
+          {% if r.score >= 5 %}★{% else %}☆{% endif %}
         </div>
 
         <div class="rbot">
@@ -104,6 +115,8 @@
           </div>
         </div>
       </article>
+    {% empty %}
+      <p style="text-align:center;">Отзывов пока нет</p>
     {% endfor %}
   </div>
 </section>

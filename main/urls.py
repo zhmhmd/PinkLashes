@@ -9,10 +9,10 @@ from .views import (
 )
 
 urlpatterns = [
-    path('', HomeTemplate.as_view(), name='home'),
-    path('/about-us', AboutUsTemplate.as_view(), name='aboutus'),
-    path('/service', ServiceTemplate.as_view(), name='service'),
-    path('/masters', MastersTemplate.as_view(), name='masters'),
-    path('/about-master/<int:id>/', MasterDetailTemplate.as_view(), name='aboutmaster'),
-    path('signup/', SignUpCreate.as_view(), name='signup'),
+    path("", HomeTemplate.as_view(), name="home"),
+    path("about-us/", AboutUsTemplate.as_view(), name="aboutus"),
+    path("service/", ServiceTemplate.as_view(), name="service"),
+    path("masters/", MastersTemplate.as_view(), name="masters"),
+    path("about-master/<int:id>/", MasterDetailTemplate.as_view(), name="aboutmaster"),
+    path("signup/", SignUpCreate.as_view(), name="signup"),
 ]

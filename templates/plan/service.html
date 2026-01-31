@@ -3,27 +3,47 @@
 
 {% block content %}
 
-<section class="sec cat">
-  <div class="chead">
-    <h2 class="h2">Типы сервисов</h2>
-  </div>
+<section class="wrap">
 
-  <div class="grid">
-    {% for t in typesofservice|slice:":6" %}
-      <div class="card">
-        <img class="img" src="static/images/614c9e029989f18c3f7ca15117e83acd73230869.jpg" alt="">
-        <div class="body">
-          <div class="name">{{ t.title }}</div>
-          <div class="price">от {{ t.price }} ₽</div>
-          <div class="btns">
-            <a class="btn btn--line" href="#">Подробнее</a>
-            <a href="#signupModal" class="open-btn">Записаться</a>
-          </div>
+  {% for t in typesofservice %}
+    {% if t.services.all %}
+      <section class="type-block">
+        <h2 class="type-title">{{ t.name }}</h2>
+
+        <div class="svc-grid">
+          {% for s in t.services.all %}
+            <article class="svc-card">
+              <div class="svc-img">
+                {% if t.img %}
+                  <img src="{{ t.img.url }}" alt="{{ s.title }}">
+                {% else %}
+                  <div class="svc-img-empty"></div>
+                {% endif %}
+              </div>
+
+              <div class="svc-body">
+                <div class="svc-name">{{ s.title }}</div>
+                <div class="svc-price">от {{ s.price }} сом</div>
+
+                <div class="svc-masters">
+                  {% for m in s.masters.all|slice:":2" %}
+                    <span class="chip">{{ m.name }}</span>
+                  {% empty %}
+                    <span class="chip chip--muted">нет мастеров</span>
+                  {% endfor %}
+                </div>
+
+                <div class="svc-actions">
+                  <a class="btn btn--ghost" href="{% url 'service' %}#signupModal">Записаться</a>
+                </div>
+              </div>
+            </article>
+          {% endfor %}
         </div>
-      </div>
-    {% endfor %}
-  </div>
-</section>
+      </section>
+    {% endif %}
+  {% endfor %}
 
+</section>
 
 {% endblock %}

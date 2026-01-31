@@ -17,9 +17,9 @@
       <div class="md-exp">Опыт работы — {{ master.experience }}</div>
 
       <div class="md-tags">
-        <span class="tag">Ногтевой сервис</span>
-        <span class="tag tag--on">Наращивание ресниц</span>
-        <span class="tag">Брови</span>
+        {% for s in master.services.all %}
+          <span class="tag tag--on">{{ s.title }}</span>
+        {% endfor %}
       </div>
 
       <p class="md-text">
@@ -56,30 +56,35 @@
 </section>
 
 <section class="sec gallery">
-
   <h2 class="h2">Фотогалерея работ</h2>
 
   <div class="tabs">
-    <a class="tab tab--on" href="#">Ногтевой сервис</a>
-    <a class="tab" href="#">Наращивание ресниц</a>
-    <a class="tab" href="#">Брови</a>
-  </div>
+  {% for t in typesofservice %}
+    <a
+      href="?type={{ t.id }}"
+      class="tab {% if active_type == t.id %}tab--active{% endif %}"
+    >
+      {{ t.name }}
+    </a>
+  {% endfor %}
+</div>
 
   <div class="ggrid">
-    {% for g in galleries|slice:":3" %}
+    {% for g in galleries %}
       <div class="gcard">
-        <div class="gimg">
-          {% if g.img %}<img src="{{ g.img.url }}" alt="{{ g.name }}">{% endif %}
-        </div>
-        <div class="gcap">{{ g.name }}</div>
+        {% if g.img %}
+          <img src="{{ g.img.url }}" alt="{{ g.name }}">
+        {% endif %}
+        <p>{{ g.name }}</p>
       </div>
+    {% empty %}
+      <p style="text-align:center;">Нет работ для этого сервиса</p>
     {% endfor %}
   </div>
 </section>
 
 
 <section class="rev">
-
   <h2 class="rh">Отзывы клиентов</h2>
 
   <div class="rgrid">
@@ -87,12 +92,14 @@
       <article class="rcard">
         <div class="rquote">“</div>
 
-        <p class="rtext">
-          {{ r.comment|truncatechars:170 }}
-        </p>
+        <p class="rtext">{{ r.comment|truncatechars:170 }}</p>
 
         <div class="rstars">
-          {% for _ in "12345"|slice:":r.score" %}★{% endfor %}
+          {% if r.score >= 1 %}★{% else %}☆{% endif %}
+          {% if r.score >= 2 %}★{% else %}☆{% endif %}
+          {% if r.score >= 3 %}★{% else %}☆{% endif %}
+          {% if r.score >= 4 %}★{% else %}☆{% endif %}
+          {% if r.score >= 5 %}★{% else %}☆{% endif %}
         </div>
 
         <div class="rbot">
@@ -107,6 +114,8 @@
           </div>
         </div>
       </article>
+    {% empty %}
+      <p style="text-align:center;">Отзывов пока нет</p>
     {% endfor %}
   </div>
 </section>
